@@ -23,8 +23,30 @@ export class App extends Component {
   }
 
   async componentDidUpdate(_, prevState) {
-    if (prevState.searchParameters !== this.state.searchParameters || prevState.page !== this.state.page) {
-      this.setState({requestStatus: "loading"})
+    if (prevState.searchParameters !== this.state.searchParameters || (prevState.page !== this.state.page)) {
+      this.setState({ requestStatus: "loading" })
+      if (prevState.searchParameters !== this.state.searchParameters && this.state.page !== 1) {
+        this.setState({page: 1})
+      } else if (prevState.searchParameters !== this.state.searchParameters && this.state.page === 1) {
+        getPhotos(this.state)
+        .then(response => {
+          if (response.ok) {
+            return response.json()
+          } else {
+            throw new Error(response.status);
+          }
+        })
+        .then(data => {
+          console.log(data)
+            
+          this.setState({ photos: [...data.hits ], totalPhotos: data.totalHits, requestStatus: "ok" })
+        })
+        .catch(error => {
+          this.setState({
+            error
+          })
+        })
+      } else if (prevState.page !== this.state.page && this.state.page !== 1) {
       getPhotos(this.state)
         .then(response => {
           if (response.ok) {
@@ -35,17 +57,36 @@ export class App extends Component {
         })
         .then(data => {
           console.log(data)
-          if (prevState.page !== this.state.page) {
-            this.setState(({photos}) => { return { photos: [...photos, ...data.hits], requestStatus: "ok" } })
-          } else {
-            this.setState({ photos: [...data.hits ], totalPhotos: data.totalHits, requestStatus: "ok" })
-          }
+            this.setState(({ photos }) => { return { photos: [...photos, ...data.hits], requestStatus: "ok" } })
+          
         })
         .catch(error => {
           this.setState({
             error
           })
         })
+      } else {
+             getPhotos(this.state)
+        .then(response => {
+          if (response.ok) {
+            return response.json()
+          } else {
+            throw new Error(response.status);
+          }
+        })
+        .then(data => {
+          console.log(data)
+
+
+          this.setState({ photos: [...data.hits], totalPhotos: data.totalHits, requestStatus: "ok" })
+        })
+        .catch(error => {
+          this.setState({
+            error
+          })
+        })
+      }
+ 
     }
   }
 
