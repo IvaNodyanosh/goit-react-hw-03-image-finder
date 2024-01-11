@@ -3,7 +3,7 @@ const key = "39382301-87481c6222a57772410795ead";
 const perPage = 12;
 
 
-export const getPhotos = ({searchParameters, page}) => {
+export const getImages = ({searchParameters, page}) => {
 
     let q = '';
 

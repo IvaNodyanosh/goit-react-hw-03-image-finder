@@ -1,10 +1,10 @@
-import css from "./ImageGalleryItem.module.css";
-import { nanoid } from 'nanoid'
+import css from './ImageGalleryItem.module.css';
 
-export const ImageGalleryItem = ({ photos }) => {
-    return <>{photos.map(({webformatURL, largeImageURL}) => {
-        return (<li className={css.ImageGalleryItem} key={nanoid()}>
-            <img src={webformatURL} alt="" data-action={largeImageURL} />
-        </li>)
-    })}</>
-}
+
+export const ImageGalleryItem = ({ src, action, name}) => {
+  return (
+    <li className={css.ImageGalleryItem}>
+      <img src={src} alt={name} data-action={action} />
+    </li>
+  );
+};
